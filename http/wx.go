@@ -3,11 +3,14 @@ package http
 import (
 	"crypto/sha1"
 	"encoding/xml"
+	"fmt"
 	"io"
 	"net/http"
 	"sort"
 	"strings"
 	"time"
+
+	"asuka/conf"
 )
 
 func wx(w http.ResponseWriter, r *http.Request) {
@@ -27,16 +30,18 @@ func wx(w http.ResponseWriter, r *http.Request) {
 		data = r.PostFormValue("data")
 	}
 
-	ss := []string{t, n, key}
-	sort.Strings(ss)
-	sha := sha1.New()
-	io.WriteString(sha, strings.Join(ss, ""))
-	signatuerGen := fmt.Sprintf("%x", sha.Sum(nil))
-	if signatuerGen != s {
-		//log fmt.Printf("get signature is: %s, gen signture is:%s\n", s, signatuerGen)
-		return
+	if conf.RunEnv == "online" {
+		ss := []string{t, n, key}
+		sort.Strings(ss)
+		sha := sha1.New()
+		io.WriteString(sha, strings.Join(ss, ""))
+		signatuerGen := fmt.Sprintf("%x", sha.Sum(nil))
+		if signatuerGen != s {
+			//log fmt.Printf("get signature is: %s, gen signture is:%s\n", s, signatuerGen)
+			return
+		}
 	}
-
+	fmt.Println(echostr)
 	res, err := dataHandler(data)
 	if err != nil {
 		//log
@@ -74,7 +79,7 @@ type RecData struct {
 
 func dataHandler(data string) (res string, err error) {
 	var recData, retData RecData
-	err = xml.Unmarshal(data, &recData)
+	err = xml.Unmarshal([]byte(data), &recData)
 	if err != nil {
 		return
 	}
@@ -83,7 +88,7 @@ func dataHandler(data string) (res string, err error) {
 	retData.ToUserName = charData(recData.FromUserName)
 	retData.FromUserName = charData(recData.ToUserName)
 	retData.MsgType = charData("text")
-	retData.CreateTime = charData(time.Now().Unix())
+	retData.CreateTime = charData(fmt.Sprintf("%v", time.Now().Unix()))
 	bytes, err := xml.Marshal(retData)
 	if err != nil {
 		return

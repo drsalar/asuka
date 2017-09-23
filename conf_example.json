@@ -1,4 +1,5 @@
 {
+	"runEnv":"dev",
 	"version":"0.0.1",
 	"http":{
 		"wx":{
@@ -9,7 +10,7 @@
 		},
 		"wxtoken":{
 			"port":5555
-		},
-		"liscensedir":"/etc/data/ssh"
-	}
+		}
+	},
+	"liscensedir":"/etc/data/ssh"
 }

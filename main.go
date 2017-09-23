@@ -7,5 +7,5 @@ import (
 
 func main() {
 	conf.Init()
-	go http.Server()
+	http.Server()
 }
