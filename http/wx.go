@@ -62,7 +62,7 @@ func wx(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Debug("wx", "handle data", "", "res", res)
+	log.Debug("wx", "return data", "", "res", res)
 
 	w.Write([]byte(res))
 	return
@@ -87,11 +87,11 @@ func wx(w http.ResponseWriter, r *http.Request) {
 
 type RetData struct {
 	XMLName      xml.Name `xml:"xml"`
-	ToUserName   string   `xml:"ToUserName,cdata"`
-	FromUserName string   `xml:"FromUserName,cdata"`
+	ToUserName   string   `xml:",cdata"`
+	FromUserName string   `xml:",cdata"`
 	CreateTime   string   `xml:"CreateTime"`
-	MsgType      string   `xml:"MsgType,cdata"`
-	Content      string   `xml:"Content,cdata"`
+	MsgType      string   `xml:",cdata"`
+	Content      string   `xml:",cdata"`
 }
 
 type RecData struct {
