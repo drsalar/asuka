@@ -87,11 +87,11 @@ func wx(w http.ResponseWriter, r *http.Request) {
 
 type RecData struct {
 	XMLName      xml.Name `xml:"xml"`
-	ToUserName   string   `xml:"ToUserName"`
-	FromUserName string   `xml:"FromUserName"`
+	ToUserName   string   `xml:"ToUserName,cdata"`
+	FromUserName string   `xml:"FromUserName,cdata"`
 	CreateTime   string   `xml:"CreateTime"`
-	MsgType      string   `xml:"MsgType"`
-	Content      string   `xml:"Content"`
+	MsgType      string   `xml:"MsgType,cdata"`
+	Content      string   `xml:"Content,cdata"`
 	MsgId        string   `xml:"MsgId"`
 }
 
