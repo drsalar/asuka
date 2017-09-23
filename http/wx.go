@@ -31,7 +31,7 @@ func wx(w http.ResponseWriter, r *http.Request) {
 		data = r.PostFormValue("data")
 	}
 
-	fmt.Println("****\n", s, t, n, echostr, data, "****\n")
+	fmt.Println("****\n", r.Method, s, t, n, echostr, data, "****\n")
 
 	log.Debug("wx", "check signature", "", "signature", s, "timestamp", t, "nonce", n, "echostr", echostr, "data", data)
 
