@@ -58,7 +58,7 @@ func wx(w http.ResponseWriter, r *http.Request) {
 
 	res, err := dataHandler(data)
 	if err != nil {
-		log.Error("wx", "handle data", "invalid data type!", "data", data)
+		log.Error("wx", "handle data", err.Error(), "data", data)
 		return
 	}
 
@@ -85,18 +85,27 @@ func wx(w http.ResponseWriter, r *http.Request) {
 // <Content><![CDATA[test]]></Content>
 // </xml>
 
-type RecData struct {
+type RetData struct {
 	XMLName      xml.Name `xml:"xml"`
 	ToUserName   string   `xml:"ToUserName,cdata"`
 	FromUserName string   `xml:"FromUserName,cdata"`
 	CreateTime   string   `xml:"CreateTime"`
 	MsgType      string   `xml:"MsgType,cdata"`
 	Content      string   `xml:"Content,cdata"`
-	MsgId        string   `xml:"MsgId"`
+}
+
+type RecData struct {
+	ToUserName   string `xml:"ToUserName"`
+	FromUserName string `xml:"FromUserName"`
+	CreateTime   string `xml:"CreateTime"`
+	MsgType      string `xml:"MsgType"`
+	Content      string `xml:"Content"`
+	MsgId        string `xml:"MsgId"`
 }
 
 func dataHandler(data string) (res string, err error) {
-	var recData, retData RecData
+	var recData RecData
+	var retData RetData
 	err = xml.Unmarshal([]byte(data), &recData)
 	if err != nil {
 		return
