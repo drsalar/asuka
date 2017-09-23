@@ -4,7 +4,7 @@ import (
 	"crypto/sha1"
 	"encoding/xml"
 	"fmt"
-	"io"
+	"io/ioutil"
 	"net/http"
 	"sort"
 	"strings"
@@ -15,37 +15,46 @@ import (
 )
 
 func wx(w http.ResponseWriter, r *http.Request) {
-	key := "ilovechina"
-	var s, t, n, echostr, data string
-	if r.Method == "GET" {
-		s = r.FormValue("signature")
-		t = r.FormValue("timestamp")
-		n = r.FormValue("nonce")
-		echostr = r.FormValue("echostr")
-		data = r.FormValue("data")
-	} else if r.Method == "POST" {
-		s = r.PostFormValue("signature")
-		t = r.PostFormValue("timestamp")
-		n = r.PostFormValue("nonce")
-		echostr = r.PostFormValue("echostr")
-		data = r.PostFormValue("data")
+	// key := "ilovechina"
+	// var s, t, n, echostr, data string
+	// if r.Method == "GET" {
+	// 	s = r.FormValue("signature")
+	// 	t = r.FormValue("timestamp")
+	// 	n = r.FormValue("nonce")
+	// 	echostr = r.FormValue("echostr")
+	// 	data = r.FormValue("data")
+	// } else if r.Method == "POST" {
+	// 	s = r.PostFormValue("signature")
+	// 	t = r.PostFormValue("timestamp")
+	// 	n = r.PostFormValue("nonce")
+	// 	echostr = r.PostFormValue("echostr")
+	// 	data = r.PostFormValue("data")
+	// }
+
+	// fmt.Println("****\n", r.Method, s, t, n, echostr, data, "****\n")
+
+	// log.Debug("wx", "check signature", "", "signature", s, "timestamp", t, "nonce", n, "echostr", echostr, "data", data)
+
+	// if conf.RunEnv == "online" {
+	// 	ss := []string{t, n, key}
+	// 	sort.Strings(ss)
+	// 	sha := sha1.New()
+	// 	io.WriteString(sha, strings.Join(ss, ""))
+	// 	genSignature := fmt.Sprintf("%x", sha.Sum(nil))
+	// 	if genSignature != s {
+	// 		log.Warning("wx", "check signature", "signature not matched!", "signature", s, "genSignature", genSignature)
+	// 		return
+	// 	}
+	// }
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Error("wx", "read data", "")
+		return
 	}
 
-	fmt.Println("****\n", r.Method, s, t, n, echostr, data, "****\n")
-
-	log.Debug("wx", "check signature", "", "signature", s, "timestamp", t, "nonce", n, "echostr", echostr, "data", data)
-
-	if conf.RunEnv == "online" {
-		ss := []string{t, n, key}
-		sort.Strings(ss)
-		sha := sha1.New()
-		io.WriteString(sha, strings.Join(ss, ""))
-		genSignature := fmt.Sprintf("%x", sha.Sum(nil))
-		if genSignature != s {
-			log.Warning("wx", "check signature", "signature not matched!", "signature", s, "genSignature", genSignature)
-			return
-		}
-	}
+	data := string(body)
+	log.Debug("wx", "read data", "", "data", data)
 
 	res, err := dataHandler(data)
 	if err != nil {
