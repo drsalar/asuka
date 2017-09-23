@@ -87,11 +87,15 @@ func wx(w http.ResponseWriter, r *http.Request) {
 
 type RetData struct {
 	XMLName      xml.Name `xml:"xml"`
-	ToUserName   string   `xml:",cdata"`
-	FromUserName string   `xml:",cdata"`
+	ToUserName   CharData `xml:"ToUserName"`
+	FromUserName CharData `xml:"FromUserName"`
 	CreateTime   string   `xml:"CreateTime"`
-	MsgType      string   `xml:",cdata"`
-	Content      string   `xml:",cdata"`
+	MsgType      CharData `xml:"MsgType"`
+	Content      CharData `xml:"Content"`
+}
+
+type CharData struct {
+	Value string `xml:",cdata"`
 }
 
 type RecData struct {
@@ -116,10 +120,10 @@ func dataHandler(data string) (res string, err error) {
 	// retData.FromUserName = charData(recData.ToUserName)
 	// retData.MsgType = charData("text")
 	// retData.CreateTime = charData(fmt.Sprintf("%v", time.Now().Unix()))
-	retData.Content = recData.Content
-	retData.ToUserName = recData.FromUserName
-	retData.FromUserName = recData.ToUserName
-	retData.MsgType = "text"
+	retData.Content.Value = recData.Content
+	retData.ToUserName.Value = recData.FromUserName
+	retData.FromUserName.Value = recData.ToUserName
+	retData.MsgType.Value = "text"
 	retData.CreateTime = fmt.Sprintf("%v", time.Now().Unix())
 	bytes, err := xml.Marshal(retData)
 	if err != nil {
