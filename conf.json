@@ -1,0 +1,15 @@
+{
+	"version":"0.0.1",
+	"http":{
+		"wx":{
+			"port":443
+		},
+		"wxapi":{
+			"port":8800
+		},
+		"wxtoken":{
+			"port":5555
+		}
+	},
+	"liscensedir":"/etc/data/ssh"
+}
