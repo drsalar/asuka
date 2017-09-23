@@ -45,7 +45,6 @@ func wx(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	fmt.Println(echostr)
 	res, err := dataHandler(data)
 	if err != nil {
 		log.Error("wx", "handle data", "invalid data type!", "data", data)

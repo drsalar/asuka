@@ -21,6 +21,7 @@ func Init() {
 	default:
 		log.SetLevel(log.InfoLevel)
 	}
+	log.Infoln("log init successed! log level is ", conf.LogLevel)
 }
 
 func Info(function string, step string, msg string, infos ...string) {
