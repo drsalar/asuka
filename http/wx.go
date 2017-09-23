@@ -1,16 +1,16 @@
 package http
 
 import (
-	"crypto/sha1"
+	// "crypto/sha1"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"sort"
-	"strings"
+	// "sort"
+	// "strings"
 	"time"
 
-	"asuka/conf"
+	// "asuka/conf"
 	"asuka/log"
 )
 
