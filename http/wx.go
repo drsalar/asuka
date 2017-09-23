@@ -86,12 +86,13 @@ func wx(w http.ResponseWriter, r *http.Request) {
 // </xml>
 
 type RecData struct {
-	ToUserName   string `xml:"ToUserName"`
-	FromUserName string `xml:"FromUserName"`
-	CreateTime   string `xml:"CreateTime"`
-	MsgType      string `xml:"MsgType"`
-	Content      string `xml:"Content"`
-	MsgId        string `xml:"MsgId"`
+	XMLName      xml.Name `xml:"xml"`
+	ToUserName   string   `xml:"ToUserName"`
+	FromUserName string   `xml:"FromUserName"`
+	CreateTime   string   `xml:"CreateTime"`
+	MsgType      string   `xml:"MsgType"`
+	Content      string   `xml:"Content"`
+	MsgId        string   `xml:"MsgId"`
 }
 
 func dataHandler(data string) (res string, err error) {
@@ -101,11 +102,16 @@ func dataHandler(data string) (res string, err error) {
 		return
 	}
 
-	retData.Content = charData(recData.Content)
-	retData.ToUserName = charData(recData.FromUserName)
-	retData.FromUserName = charData(recData.ToUserName)
-	retData.MsgType = charData("text")
-	retData.CreateTime = charData(fmt.Sprintf("%v", time.Now().Unix()))
+	// retData.Content = charData(recData.Content)
+	// retData.ToUserName = charData(recData.FromUserName)
+	// retData.FromUserName = charData(recData.ToUserName)
+	// retData.MsgType = charData("text")
+	// retData.CreateTime = charData(fmt.Sprintf("%v", time.Now().Unix()))
+	retData.Content = recData.Content
+	retData.ToUserName = recData.FromUserName
+	retData.FromUserName = recData.ToUserName
+	retData.MsgType = "text"
+	retData.CreateTime = fmt.Sprintf("%v", time.Now().Unix())
 	bytes, err := xml.Marshal(retData)
 	if err != nil {
 		return
