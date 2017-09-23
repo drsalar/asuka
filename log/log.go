@@ -44,7 +44,7 @@ func Debug(function string, step string, msg string, infos ...string) {
 }
 
 func makeFields(function string, step string, msg string, infos []string) (fields log.Fields) {
-	Fields = make(map[string]interface{})
+	fields = make(map[string]interface{})
 	fields["func"] = function
 	fields["step"] = step
 	fields["time"] = time.Now().Format("2006-01-02 15:04:05")
