@@ -8,8 +8,9 @@ import (
 type config struct {
 	V string `json:"version"`
 	H Http   `json:"http"`
-	L string `json:"liscensedir"`
+	D string `json:"liscensedir"`
 	R string `json:"runEnv"`
+	L string `json:"logLevel"`
 }
 
 type Http struct {
@@ -23,7 +24,7 @@ type HttpInstance struct {
 }
 
 var Http_wx, Http_wxapi, Http_wxtoken HttpInstance
-var Version, Liscensedir, RunEnv string
+var Version, Liscensedir, RunEnv, LogLevel string
 
 func Init() error {
 	file, err := ioutil.ReadFile("conf.json")
@@ -39,7 +40,8 @@ func Init() error {
 	Http_wxapi = c.H.Wxapi
 	Http_wxtoken = c.H.Wxtoken
 	Version = c.V
-	Liscensedir = c.L
+	Liscensedir = c.D
 	RunEnv = c.R
+	LogLevel = c.L
 	return nil
 }

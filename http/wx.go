@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"asuka/conf"
+	"asuka/log"
 )
 
 func wx(w http.ResponseWriter, r *http.Request) {
@@ -30,23 +31,29 @@ func wx(w http.ResponseWriter, r *http.Request) {
 		data = r.PostFormValue("data")
 	}
 
+	log.Debug("wx", "check signature", "", "signature", s, "timestamp", t, "nonce", n, "echostr", echostr, "data", data)
+
 	if conf.RunEnv == "online" {
 		ss := []string{t, n, key}
 		sort.Strings(ss)
 		sha := sha1.New()
 		io.WriteString(sha, strings.Join(ss, ""))
-		signatuerGen := fmt.Sprintf("%x", sha.Sum(nil))
-		if signatuerGen != s {
-			//log fmt.Printf("get signature is: %s, gen signture is:%s\n", s, signatuerGen)
+		genSignature := fmt.Sprintf("%x", sha.Sum(nil))
+		if genSignature != s {
+			log.Warning("wx", "check signature", "signature not matched!", "signature", s, "genSignature", genSignature)
 			return
 		}
 	}
+
 	fmt.Println(echostr)
 	res, err := dataHandler(data)
 	if err != nil {
-		//log
+		log.Error("wx", "handle data", "invalid data type!", "data", data)
 		return
 	}
+
+	log.Debug("wx", "handle data", "", "res", res)
+
 	w.Write([]byte(res))
 	return
 }
@@ -93,6 +100,9 @@ func dataHandler(data string) (res string, err error) {
 	if err != nil {
 		return
 	}
+
+	log.Debug("dataHandler", "handler", "", "from", recData.FromUserName, "to", recData.ToUserName, "type", recData.MsgType, "createTime", recData.CreateTime, "content", recData.Content, "msgId", recData.MsgId)
+
 	res = string(bytes)
 	return
 }

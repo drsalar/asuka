@@ -1,5 +1,6 @@
 {
 	"runEnv":"dev",
+	"logLevel":"debug",
 	"version":"0.0.1",
 	"http":{
 		"wx":{
