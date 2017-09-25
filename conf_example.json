@@ -13,5 +13,6 @@
 			"port":5555
 		}
 	},
-	"liscensedir":"/etc/data/ssh"
+	"liscensedir":"/etc/data/ssh",
+	"menu":"/etc/data/menu.json"
 }
