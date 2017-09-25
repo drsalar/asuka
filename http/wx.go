@@ -46,7 +46,7 @@ func wx(w http.ResponseWriter, r *http.Request) {
 	// 		return
 	// 	}
 	// }
-
+	defer r.Body.Close()
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Error("wx", "read data", "")
@@ -62,9 +62,9 @@ func wx(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Debug("wx", "return data", "", "res", res)
+	log.Debug("wx", "return data", "", "res", string(res))
 
-	w.Write([]byte(res))
+	w.Write(res)
 	return
 }
 
@@ -107,7 +107,7 @@ type RecData struct {
 	MsgId        string `xml:"MsgId"`
 }
 
-func dataHandler(data string) (res string, err error) {
+func dataHandler(data string) (res []byte, err error) {
 	var recData RecData
 	var retData RetData
 	err = xml.Unmarshal([]byte(data), &recData)
@@ -125,14 +125,13 @@ func dataHandler(data string) (res string, err error) {
 	retData.FromUserName.Value = recData.ToUserName
 	retData.MsgType.Value = "text"
 	retData.CreateTime = fmt.Sprintf("%v", time.Now().Unix())
-	bytes, err := xml.Marshal(retData)
+	res, err = xml.Marshal(retData)
 	if err != nil {
 		return
 	}
 
 	log.Debug("dataHandler", "handler", "", "from", recData.FromUserName, "to", recData.ToUserName, "type", recData.MsgType, "createTime", recData.CreateTime, "content", recData.Content, "msgId", recData.MsgId)
 
-	res = string(bytes)
 	return
 }
 

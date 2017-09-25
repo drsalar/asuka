@@ -11,6 +11,7 @@ type config struct {
 	D string `json:"liscensedir"`
 	R string `json:"runEnv"`
 	L string `json:"logLevel"`
+	M string `json:"menu"`
 }
 
 type Http struct {
@@ -20,11 +21,11 @@ type Http struct {
 }
 
 type HttpInstance struct {
-	Port int `json:"port"`
+	Port string `json:"port"`
 }
 
 var Http_wx, Http_wxapi, Http_wxtoken HttpInstance
-var Version, Liscensedir, RunEnv, LogLevel string
+var Version, Liscensedir, RunEnv, LogLevel, Menu string
 
 func Init() error {
 	file, err := ioutil.ReadFile("conf.json")
@@ -43,5 +44,6 @@ func Init() error {
 	Liscensedir = c.D
 	RunEnv = c.R
 	LogLevel = c.L
+	Menu = c.M
 	return nil
 }
